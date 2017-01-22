@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>geolocation</title>
+</head>
+<body>
+    <div>navigator.geolocation.getCurrentPosition(success,[error],[options])</div>
+    <div>navigator.geolocation.watchPosition(success,[error],[options])</div>
+    <div>navigator.geolocation.clearWatchtP()</div>
+<button onclick="getCurrent()">获取地理位置</button>
+<button onclick="getMap()">显示地理位置</button>
+    <div id="currentPos"></div>
+<script>
+    //基本操作
+    function getCurrent() {
+        navigator.geolocation.getCurrentPosition(function (pos) {
+            console.log(pos);
+            document.getElementById('currentPos').innerHTML=pos.coords.latitude;
+            document.getElementById('currentPos').innerHTML=pos.coords.longitude;
+            }
+        )
+    }
+    //从谷歌地图获取地理位置图片:国内需代理
+    function getMap() {
+        var image=document.createElement("img");
+        navigator.geolocation.getCurrentPosition(setMapURL);
+        return image;
+        function setMapURL(pos) {
+            var url = "http://maps.google.com/maps/api/staticmap"+"?center="+pos.coords.latitude+","+pos.coords.longitude+"&size=640x640&sensor=true";
+            var zoomlevel=20;
+            if(pos.coords.accuracy>80){
+                zoomlevel -= Math.round(Math.log(pos.coords.accuracy/50)/Math.LN2);
+            }
+            url += "&zoom="+zoomlevel;
+            image.src=url;
+        }
+    }
+    //全部操作
+    function whereami(elt) {
+        var options={
+            enableHighAccuracy:false,  //true:高精度，false:默认值，近似值
+            maximumAge:3000, //5分钟左右:愿意等待获取位置信息时长，默认值无限时长
+            timeout:15000 //不要超过15s
+        }
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(success,error,options)
+        }
+        else {
+            elt.innerHTML="啥破玩意儿，不支持该功能"
+        }
+        function error(e) {
+            //1:用户不允许
+            //2:浏览器无法确定位置
+            //3:超时
+            elt.innerHTML=e.code+":"+e.message
+        }
+        function success(pos) {
+            //pos.coords.altitude:海拔信息
+            //pos.coords.speed:速度航向信息
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FileAPI</title>
+</head>
+<body>
+<script>
+    //异步
+    function logerr(e) {console.log(e);}
+    var filesystem;
+    requestFileSystem(PRESISTENT,10*1024*1024,function (fs) {
+        filesystem=fs;
+    },logerr);
+    
+</script>
+</body>
+</html>
